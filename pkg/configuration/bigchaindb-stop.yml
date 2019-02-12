@@ -13,7 +13,5 @@
     - name: Gathering Facts
       setup: #aka gather_facts
   roles:
-    - tendermint
-    - bigchaindb
-    - mongodb
-    - { role: docker, when: stack_type|lower == "docker" or stack_type|lower == "cloud" }
+    - bigchaindb-all-in-one
+    - { role: docker }

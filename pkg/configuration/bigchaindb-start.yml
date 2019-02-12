@@ -15,9 +15,8 @@
     - name: Gathering Facts
       setup: #aka gather_facts
   roles:
-    - { role: py36, when: stack_type|lower == "local" }
-    - { role: docker, when: stack_type|lower == "docker" or stack_type|lower == "cloud" }
-    - mongodb
+    - { role: docker }
+    
 
 - hosts: all
   vars_files:
@@ -26,5 +25,4 @@
     action: "{{ operation }}"
     home_dir: "{{ home_path }}"
   roles:
-    - tendermint
-    - bigchaindb
+    - bigchaindb-all-in-one
