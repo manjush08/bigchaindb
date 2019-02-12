@@ -13,7 +13,7 @@ RUN apk --update add sudo bash \
         libffi-dev openssl-dev build-base jq \
     && apk add --no-cache libstdc++ dpkg gnupg \
     && pip3 install --upgrade pip cffi \
-    && pip install -e . \
+    && pip install --no-cache-dir --no-use-pep517 -e . \
     && apk del build-dependencies \
     && rm -f /var/cache/apk/*
 
@@ -29,8 +29,8 @@ RUN wget https://github.com/tendermint/tendermint/releases/download/v${TM_VERSIO
 ENV TMHOME=/tendermint
 
 # Set permissions required for mongodb
-RUN mkdir -p /data/db /data/configdb \
-        && chown -R mongodb:mongodb /data/db /data/configdb
+#RUN mkdir -p /data/db /data/configdb \
+#        && chown -R mongodb:mongodb /data/db /data/configdb
 
 # BigchainDB enviroment variables
 ENV BIGCHAINDB_DATABASE_PORT 27017
@@ -43,9 +43,10 @@ ENV BIGCHAINDB_WSSERVER_ADVERTISED_HOST 0.0.0.0
 ENV BIGCHAINDB_WSSERVER_ADVERTISED_SCHEME ws
 ENV BIGCHAINDB_TENDERMINT_PORT 26657
 
-VOLUME /data/db /data/configdb /tendermint
+
+#VOLUME /data/db /data/configdb /tendermint
 
 EXPOSE 27017 28017 9984 9985 26656 26657 26658
 
 WORKDIR $HOME
-ENTRYPOINT ["/usr/src/app/pkg/scripts/all-in-one.bash"]
+#ENTRYPOINT ["/usr/src/app/pkg/scripts/all-in-one.bash"]
