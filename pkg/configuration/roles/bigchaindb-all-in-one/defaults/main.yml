@@ -14,8 +14,6 @@ distribution_name: "{{ ansible_distribution|lower }}"
 distribution_codename: "{{ ansible_distribution_release|lower }}"
 distribution_major: "{{ ansible_distribution_major_version }}"
 
-directories:
-  - /data
 
 backend_db: localmongodb #[localmongodb]
 
@@ -44,9 +42,9 @@ tendermint_binary_url: "https://github.com/tendermint/tendermint/releases/downlo
 # Docker configuration
 tendermint_image_name: "bigchaindb/tendermint"
 tendermint_image_tag: "develop"
-tendermint_docker_name: "tendermint"
-bigchaindb_docker_name: "bigchaindb"
-bigchaindb_docker_net: "bigchaindb_docker_net"
+#tendermint_docker_name: "tendermint"
+#bigchaindb_docker_name: "bigchaindb"
+#bigchaindb_docker_net: "bigchaindb_docker_net"
 tendermint_host_mount_dir: "{{ home_dir }}/tendermint_docker"
 tendermint_host_mount_config_dir: "{{ home_dir }}/tendermint_config"
 tendermint_home: /tendermint/config
@@ -54,8 +52,7 @@ tendermint_p2p_port: 26656
 tendermint_rpc_port: 26657
 tendermint_abci_port: 26658
 
-directories:
-  - "{{ tendermint_home }}"
+
 
 tendermint_conf_files: [
   { src: "genesis.json", dest: "{{ tendermint_home }}/genesis.json"},
@@ -69,9 +66,9 @@ tendermint_conf_files: [
 mongodb_package: "mongodb-org"
 apt_key_fingerprint: "2930ADAE8CAF5059EE73BB4B58712A2291FA4AD5"
 apt_keyserver: "hkp://keyserver.ubuntu.com:80"
-distribution_name: "{{ ansible_distribution|lower }}"
-distribution_codename: "{{ ansible_distribution_release|lower }}"
-distribution_major: "{{ ansible_distribution_major_version }}"
+#distribution_name: "{{ ansible_distribution|lower }}"
+#distribution_codename: "{{ ansible_distribution_release|lower }}"
+#distribution_major: "{{ ansible_distribution_major_version }}"
 server_arch: "amd64,arm64"
 
 # MongoDB Repos
@@ -98,8 +95,8 @@ mongodb_port: 27017
 mongodb_admin_port: 28017
 
 # Docker configuration
-bigchaindb_docker_net: "bigchaindb_docker_net"
-mongodb_docker_name: "mongodb"
+#bigchaindb_docker_net: "bigchaindb_docker_net"
+#mongodb_docker_name: "mongodb"
 mongodb_host_mount_dir: "{{ home_dir }}/mongodb_docker"
 
 

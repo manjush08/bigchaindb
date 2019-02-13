@@ -9,8 +9,8 @@
     state: build
     tag: "{{all_image_tag }}"
     dockerfile: Dockerfile-all-in-one
-    path: "{{ home_dir }}/bigchaindb/Dockerfile-all-in-one"
-    nocache: yes
+    path: "{{ home_dir }}/bigchaindb/"
+    nocache: no
   when: stack_type|lower == "docker" or stack_type|lower == "cloud"
   tags: [bigchaindb-all-in-one]
 
@@ -29,8 +29,9 @@
         for i in $( seq {{ stack_size }} );do
         tendermint gen_validator > /tendermint/config/priv_validator$i.json;
         tendermint gen_node_key > /tendermint/config/node_id$i; mv /tendermint/config/node_key.json /tendermint/config/node_key$i.json;
-        cat tendermint/config/priv_validator$i.json | jq ".pub_key" | jq ". as \$k | {pub_key: \$k, power: \"10\",
+        cat /tendermint/config/priv_validator$i.json | jq ".pub_key" | jq ". as \$k | {pub_key: \$k, power: \"10\",
           name: \"{{ all_docker_name }}$i\"}" > pub_validator$i.json;
+          echo \"hello\";
         cat /tendermint/config/genesis.json | jq ".validators |= .+ [$(cat pub_validator$i.json)]" > tmpgenesis;
         mv tmpgenesis /tendermint/config/genesis.json;
         done'
@@ -60,13 +61,13 @@
       - "{{ tendermint_host_mount_dir }}{{ item|string }}{{ tendermint_home }}:{{ tendermint_home }}"
       - "{{ tendermint_host_mount_config_dir }}{{ tendermint_home }}:/tendermint_config"
     entrypoint: ''
-    command: bash -c 'mongod && cp /tendermint_config/genesis.json /tendermint/config/genesis.json &&
+    command: bash -c 'mongod & nohup bigchaindb start > ${HOME}/bigchaindb.log 2>&1 & cp /tendermint_config/genesis.json /tendermint/config/genesis.json &&
       mv /tendermint_config/priv_validator"{{ item|string }}".json /tendermint/config/priv_validator.json &&
       mv /tendermint_config/node_key"{{ item|string }}".json /tendermint/config/node_key.json &&
       peers=() && for i in $( seq {{ stack_size }} );do peers+=($(cat /tendermint_config/node_id$i)@"{{ all_docker_name }}$i:{{ tendermint_p2p_port }}");done &&
       peers=$(IFS=","; echo "${peers[*]}") && echo $peers &&
       tendermint node --p2p.persistent_peers="$peers" --p2p.laddr "tcp://"{{ all_docker_name }}{{ item|string }}":26656"
-      --proxy_app="tcp://"{{ all_docker_name }}{{ item|string }}":26658" --consensus.create_empty_blocks=false --p2p.pex=false && bigchaindb -l DEBUG start'
+      --proxy_app="tcp://"{{ all_docker_name }}{{ item|string }}":26658" --consensus.create_empty_blocks=false --p2p.pex=false  > ${HOME}/tendermint.log 2>&1'
     state: started
     keep_volumes: true
   with_sequence: start=1 end="{{ stack_size|int }}" stride=1

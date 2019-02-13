@@ -1,0 +1,3 @@
+FROM test:latest
+LABEL maintainer "manjush.mangal@siemens.com"
+RUN apk --update add jq

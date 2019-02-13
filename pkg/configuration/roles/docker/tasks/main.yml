@@ -35,6 +35,8 @@
 
 - name: Install docker-py
   pip:
+    virtualenv: /tmp/py3
+    virtualenv_command: /usr/bin/python3 -m venv
     name: docker-py
     state: latest
   tags: [docker]
