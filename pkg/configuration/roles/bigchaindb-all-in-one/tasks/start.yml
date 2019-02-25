@@ -59,6 +59,7 @@
       - "{{ mongodb_host_mount_dir }}{{ item|string }}/db:{{ mongodb_storage_path }}"
       - "{{ mongodb_host_mount_dir }}{{ item|string }}/configdb:{{ mongodb_config_path }}"
       - "{{ tendermint_host_mount_dir }}{{ item|string }}{{ tendermint_home }}:{{ tendermint_home }}"
+      - "{{ tendermint_host_mount_dir }}{{ item|string }}{{ tendermint_chain }}:{{ tendermint_chain }}"
       - "{{ tendermint_host_mount_config_dir }}{{ tendermint_home }}:/tendermint_config"
     entrypoint: ''
     command: bash -c 'mongod & nohup bigchaindb start > ${HOME}/bigchaindb.log 2>&1 & cp /tendermint_config/genesis.json /tendermint/config/genesis.json &&
